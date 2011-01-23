@@ -5,6 +5,7 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 
 
+
 public class PSO {
 	private static PSO instance;
 	public static PSO instance(){
