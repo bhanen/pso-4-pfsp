@@ -8,22 +8,38 @@ import javax.crypto.Mac;
 
 
 public class JobParser {
-	public static void main(String[] args) {
-		InputStream in = null;System.out.println("parsing..");
+	public PermutationFlowShopProblem getProblem(String path) {
+		InputStream in = null;
+		PermutationFlowShopProblem f = null;
 		try {
-			in = "".getClass().getResourceAsStream("/flowshop/100_10_01_ta071.txt");
-			PermutationFlowShopProblem f = new PermutationFlowShopProblem();
+			in = getClass().getResourceAsStream(path);
+			f = new PermutationFlowShopProblem();
+			if (path.endsWith(".txt")){
+				path = path.substring(0,path.length()-4);
+			}
+			int loc = path.lastIndexOf('/');
+			int loc1 = path.lastIndexOf('\\');
+			if (loc > loc1){
+				loc1 = loc;
+			}
+			if (loc1 != -1){
+				path = path.substring(loc1+1);
+			}
+			f.setName(path);
 			f.parse(in);
-			f.show_in_console();
 		} catch (Exception e) {
 			e.printStackTrace();
+			f = null;
 		} finally {
 			try {
 				in.close();
 			} catch (Exception e) {
 			}
 		}
+		return f;
 	}
+	
+	
 	
 	
 	
