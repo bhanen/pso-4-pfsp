@@ -22,9 +22,21 @@ public class PermutationFlowShopProblem {
 	 * her işin bitiş süresi
 	 */
 	private int due_times[];
+	public int getJobNum(){
+		return job_num;
+	}
+	public int getMachineNum(){
+		return machine_num;
+	}
+	public int[] getMachineTimes(int job_num){
+		return job_times[job_num];
+	}
 	
 	public void setName(String name){
 		this.name = name;
+	}
+	public String getName(){
+		return name;
 	}
 	public void parse(InputStream input){
 		try {
