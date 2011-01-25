@@ -47,6 +47,7 @@ public class PSOScreen extends JFrame {
 	private JComboBox test_turu; 
 	private JComboBox zaman_kisiti ;
 	private JComboBox iterasyon_sayisi ;
+	private JComboBox deneme_sayisi;
 	private JButton coz;
 	private JLabel makespan;
 	private JLabel current_iterasyon_sayisi;
@@ -173,8 +174,6 @@ public class PSOScreen extends JFrame {
 		g.fill = GridBagConstraints.HORIZONTAL;
 		en_iyi_cozume_ulasma_zamani = new JLabel("En iyi çözüme ulaşma zamanı: ");
 		yonetim.add(en_iyi_cozume_ulasma_zamani,g);
-		
-		
 		
 		g = new GridBagConstraints();
 		g.gridx = 0;
@@ -353,10 +352,31 @@ public class PSOScreen extends JFrame {
 		g.fill = GridBagConstraints.HORIZONTAL;
 		ayarlar.add(iterasyon_sayisi,g);
 		
-		dosyaya_yaz = new JCheckBox("Dosyaya Yaz");
+		
 		g = new GridBagConstraints();
 		g.gridx = 0;
 		g.gridy = 14;
+		g.fill = GridBagConstraints.HORIZONTAL;
+		ayarlar.add(new JLabel("Deneme Sayısı"),g);
+		
+		deneme_sayisi = new JComboBox();
+		deneme_sayisi.addItem(new ComboItem("1 Deneme",1));
+		deneme_sayisi.addItem(new ComboItem("5 Deneme",5));
+		deneme_sayisi.addItem(new ComboItem("10 Deneme",10));
+		deneme_sayisi.addItem(new ComboItem("20 Deneme",20));
+		deneme_sayisi.setSelectedIndex(0);
+		
+		g = new GridBagConstraints();
+		g.gridx = 0;
+		g.gridy = 15;
+		g.fill = GridBagConstraints.HORIZONTAL;
+		ayarlar.add(deneme_sayisi,g);
+		
+		
+		dosyaya_yaz = new JCheckBox("Dosyaya Yaz");
+		g = new GridBagConstraints();
+		g.gridx = 0;
+		g.gridy = 16;
 		g.fill = GridBagConstraints.HORIZONTAL;
 		ayarlar.add(dosyaya_yaz,g);
 		problem_kumesini_tekrar_belirle();
@@ -438,7 +458,7 @@ public class PSOScreen extends JFrame {
 		current_time.setText("Zaman: "+m+" ms");
 	}
 	public void pso_set_makespan(int m){
-		makespan.setText("Üretim Zamanı: "+m);
+		makespan.setText("Yayılma Zamanı: "+m);
 	}
 	public void pso_set_current_percent(int percent){
 		bar.setCurrentAmount(percent);
@@ -454,6 +474,7 @@ public class PSOScreen extends JFrame {
 		PSO.instance().setMaksimum_iterasyon(((ComboItem)iterasyon_sayisi.getSelectedItem()).option);
 		PSO.instance().setParcacik_sayisi(((ComboItem)parcacik_sayisi.getSelectedItem()).option);
 		PSO.instance().setZaman_kisiti(((ComboItem)zaman_kisiti.getSelectedItem()).option);
+		PSO.instance().setDenemeSayisi(((ComboItem)deneme_sayisi.getSelectedItem()).option);
 	}
 	class ComboItem {
 		String lbl;

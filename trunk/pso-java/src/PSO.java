@@ -26,9 +26,13 @@ public class PSO {
 	private int problem_index;
 	private int maksimum_iterasyon;
 	private int zaman_kisiti;
+	private int deneme_sayisi;
 	private ParticleGroup pg;
 	private PSO(){
 		pg = new ParticleGroup();
+	}
+	public void setDenemeSayisi(int de){
+		deneme_sayisi = de;
 	}
 	public void setDosyayaYaz(boolean d){
 		dosyaya_yaz = d;
@@ -65,14 +69,13 @@ public class PSO {
 		String name = Test.names[problem_index];
 		PSOScreen.instance().pso_set_name(name);
 		JobParser j = new JobParser();
-		//PermutationFlowShopProblem problem = j.getProblem("/flowshop/test.txt");
-		PermutationFlowShopProblem problem = j.getProblem("/flowshop/"+name);
-		//PermutationFlowShopProblem problem = j.getProblem("/flowshop/50_20_07_ta057.txt");
-		//PermutationFlowShopProblem problem = j.getProblem("/flowshop/500_20_10_ta120.txt");
-		pg.init(problem, parcacik_sayisi, 0, 4, -4, 4);
+		final PermutationFlowShopProblem problem = j.getProblem("/flowshop/"+name);
 		Thread t = new Thread(){
 			public void run() {
-				pg.solve(maksimum_iterasyon,zaman_kisiti);
+				for (int i = 0; i < deneme_sayisi; i++) {
+					pg.init(problem, parcacik_sayisi, 0, 4, -4, 4);
+					pg.solve(maksimum_iterasyon,zaman_kisiti);
+				}
 			};
 		};
 		t.start();
