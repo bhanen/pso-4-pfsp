@@ -5,10 +5,12 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Polygon;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
@@ -75,10 +77,14 @@ public class PSO {
 				for (int i = 0; i < deneme_sayisi; i++) {
 					pg.init(problem, parcacik_sayisi, 0, 4, -4, 4);
 					pg.solve(maksimum_iterasyon,zaman_kisiti);
+					PSOScreen.instance().pso_cozum_ekle(pg.cozum.getClone());
 				}
 			};
 		};
 		t.start();
+	}
+	public void setCozum(Cozum c){
+		pg.setPaintedCozum(c);
 	}
 	public JComponent getCozumEkrani(){
 		return pg.getScreen();
@@ -98,9 +104,13 @@ class ParticleGroup{
 	private FileOutputStream fileOutput;
 	private boolean dosyaya_yaz;
 	private long baslangic_zamani;
+	public Cozum cozum;
+	private Cozum painted_cozum;
 	public ParticleGroup(){
+		cozum = new Cozum();
 		init = false;
 		screen =  new JComponent(){
+			
 			Font font = Font.getFont("Arial");
 			Color colors[]={
 				Color.black,	
@@ -127,6 +137,9 @@ class ParticleGroup{
 				if (!init){
 					return;
 				}
+				if (painted_cozum != null){
+					showing_order = painted_cozum.cozum;
+				}
 				boolean make_table = false;
 				if (table == null || showing_order == null){
 					showing_order = new int[global_best_order.length];
@@ -147,6 +160,7 @@ class ParticleGroup{
 				if (make_table){
 					System.arraycopy(global_best_order,0,showing_order,0,showing_order.length);
 					table = Algorithm.TFT_table(global_best_order, problem);
+					cozum.table = table;
 					total_makespan = Algorithm.TFT("paint", global_best_order, problem, temp);
 				}
 				int cur_y = 0;
@@ -251,6 +265,9 @@ class ParticleGroup{
 			}
 		};
 	}
+	public void setPaintedCozum(Cozum c){
+		painted_cozum = c;
+	}
 	public void stop(){
 		stop = true;
 	}
@@ -262,6 +279,7 @@ class ParticleGroup{
 		this.problem = problem;
 		stop = false;
 		dosyaya_yaz = PSO.instance().dosyaya_yaz();
+		painted_cozum = null;
 		if (dosyaya_yaz){
 			File f = new File(problem.getName()+"_"+System.currentTimeMillis()+".txt");
 			try {
@@ -280,6 +298,7 @@ class ParticleGroup{
 		particles = new Particle[particle_num];
 		global_best = new double[problem.getJobNum()];
 		global_best_order = new int[problem.getJobNum()];
+		cozum.cozum = global_best_order;
 		temp = new int[problem.getMachineNum()];
 		if (dosyaya_yaz){
 			writeToFile("Başlangıç parametreleri");
@@ -349,7 +368,8 @@ class ParticleGroup{
 				}
 			}
 			long ti2 = System.currentTimeMillis();
-			PSOScreen.instance().pso_set_current_time(((ti2-baslangic_zamani)));
+			PSOScreen.instance().pso_set_current_time(ti2-baslangic_zamani);
+			cozum.toplam_zaman = (ti2-baslangic_zamani);
 			if (maks_dakika != -1 ) {
 				if ( ti2 - baslangic_zamani > maks_millis){
 					break;
@@ -363,6 +383,7 @@ class ParticleGroup{
 			if (stop){
 				break;
 			}
+			cozum.iterasyon_sayisi = j+1; 
 			PSOScreen.instance().pso_set_current_iterasyon(j+1);
 		}
 		if (dosyaya_yaz){
@@ -386,8 +407,10 @@ class ParticleGroup{
 				System.arraycopy(p_order, 0, global_best_order, 0, p_x.length);
 				screen.invalidate();
 				screen.repaint();
+				cozum.yayilma_zaman = global_best_tft;
 				PSOScreen.instance().pso_set_makespan(global_best_tft);
 				PSOScreen.instance().pso_set_en_iyi_ulasim_zamani(System.currentTimeMillis() - baslangic_zamani);
+				cozum.en_iyi_cozum_zaman = System.currentTimeMillis() - baslangic_zamani;
 				if (dosyaya_yaz){
 					writeToFile("Yeni çözüm bulundu. En iyi TFT="+global_best_tft);
 					writeToFile("GBEST X: "+Algorithm.getArrayString(global_best));
