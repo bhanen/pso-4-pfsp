@@ -55,6 +55,7 @@ public class PSOScreen extends JFrame {
 	private JLabel en_iyi_cozume_ulasma_zamani;
 	private JLabel problem_ismi;
 	private JButton durdur;
+	private JComboBox cozum_kumesi;
 	private JCheckBox dosyaya_yaz;
 	private Gauge bar;
 	private static PSOScreen instance;
@@ -91,7 +92,7 @@ public class PSOScreen extends JFrame {
 		con1.add(PSO.instance().getCozumEkrani(),g);
 		
 		setVisible(true);
-		setSize(400,300);
+		setSize(800,600);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -122,6 +123,12 @@ public class PSOScreen extends JFrame {
 				durdur.setEnabled(false);
 			}
 		});
+		cozum_kumesi = new JComboBox();
+		cozum_kumesi.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				cozum_goster();
+			}
+		});
 		g = new GridBagConstraints();
 		g.gridx = 0;
 		g.gridy = 0;
@@ -134,11 +141,20 @@ public class PSOScreen extends JFrame {
 		g.weightx = 1;
 		yonetim.add(durdur,g);
 		
+		g = new GridBagConstraints();
+		g.gridx = 2;
+		g.gridy = 0;
+		g.weightx = 1;
+		yonetim.add(cozum_kumesi,g);
+		
+		
+		
 		
 		g = new GridBagConstraints();
 		g.gridx = 0;
 		g.gridy = 1;
 		g.weightx = 1;
+		g.gridwidth = 3;
 		g.fill = GridBagConstraints.HORIZONTAL;
 		problem_ismi = new JLabel("Problem: ");
 		yonetim.add(problem_ismi,g);
@@ -147,6 +163,7 @@ public class PSOScreen extends JFrame {
 		g.gridx = 0;
 		g.gridy = 2;
 		g.weightx = 1;
+		g.gridwidth = 3;
 		g.fill = GridBagConstraints.HORIZONTAL;
 		makespan = new JLabel("Yayılma Zamanı: ");
 		yonetim.add(makespan,g);
@@ -156,6 +173,7 @@ public class PSOScreen extends JFrame {
 		g.gridy = 3;
 		g.weightx = 1;
 		g.fill = GridBagConstraints.HORIZONTAL;
+		g.gridwidth = 3;
 		current_iterasyon_sayisi = new JLabel("İterasyon Sayısı: ");
 		yonetim.add(current_iterasyon_sayisi,g);
 		
@@ -164,6 +182,7 @@ public class PSOScreen extends JFrame {
 		g.gridy = 4;
 		g.weightx = 1;
 		g.fill = GridBagConstraints.HORIZONTAL;
+		g.gridwidth = 3;
 		current_time = new JLabel("Zaman: ");
 		yonetim.add(current_time,g);
 		
@@ -172,6 +191,7 @@ public class PSOScreen extends JFrame {
 		g.gridy = 5;
 		g.weightx = 1;
 		g.fill = GridBagConstraints.HORIZONTAL;
+		g.gridwidth = 3;
 		en_iyi_cozume_ulasma_zamani = new JLabel("En iyi çözüme ulaşma zamanı: ");
 		yonetim.add(en_iyi_cozume_ulasma_zamani,g);
 		
@@ -180,10 +200,22 @@ public class PSOScreen extends JFrame {
 		g.gridy = 6;
 		g.gridwidth = 2;
 		g.weightx = 1;
+		g.gridwidth = 3;
 		g.fill = GridBagConstraints.HORIZONTAL;
 		
 		yonetim.add(bar,g);
 		return yonetim;
+	}
+	private void cozum_goster(){
+		if (cozum_kumesi.getItemCount() > 0){
+			Cozum i = (Cozum)cozum_kumesi.getSelectedItem();
+			pso_set_current_iterasyon(i.iterasyon_sayisi);
+			pso_set_current_time(i.toplam_zaman);
+			pso_set_en_iyi_ulasim_zamani(i.en_iyi_cozum_zaman);
+			pso_set_makespan(i.yayilma_zaman);
+			PSO.instance().setCozum(i);
+		}
+		
 	}
 	private JPanel ayarlar(){
 		
@@ -454,6 +486,11 @@ public class PSOScreen extends JFrame {
 	public void pso_set_en_iyi_ulasim_zamani(long m){
 		en_iyi_cozume_ulasma_zamani.setText("En iyi çözüme ulaşma zamanı: "+m+" ms");
 	}
+	public void pso_cozum_ekle(Cozum cozum){
+		int count = cozum_kumesi.getItemCount();
+		cozum.label = ""+(count+1)+". Çözüm";
+		cozum_kumesi.addItem(cozum);
+	}
 	public void pso_set_current_time(long m){
 		current_time.setText("Zaman: "+m+" ms");
 	}
@@ -469,6 +506,7 @@ public class PSOScreen extends JFrame {
 		current_iterasyon_sayisi.setText("İterasyon Sayısı: ");
 		problem_ismi.setText("Problem: ");
 		current_time.setText("Zaman: ");
+		cozum_kumesi.removeAllItems();
 		PSO.instance().setDosyayaYaz(dosyaya_yaz.isSelected());
 		PSO.instance().setProblemIndex(((ComboItem)genel_problemler.getSelectedItem()).option);
 		PSO.instance().setMaksimum_iterasyon(((ComboItem)iterasyon_sayisi.getSelectedItem()).option);
