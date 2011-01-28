@@ -494,6 +494,28 @@ public class PSOScreen extends JFrame {
 		int count = cozum_kumesi.getItemCount();
 		cozum.label = ""+(count+1)+". Çözüm";
 		cozum_kumesi.addItem(cozum);
+		int min;
+		int min_index;
+		Cozum c = (Cozum)cozum_kumesi.getItemAt(0);
+		min = c.yayilma_zaman;
+		min_index = 0;
+		
+		for (int i = 1; i < cozum_kumesi.getItemCount(); i++) {
+			c = (Cozum)cozum_kumesi.getItemAt(i);
+			if (c.yayilma_zaman < min){
+				min = c.yayilma_zaman ;
+				min_index = i;
+			}
+		}
+		
+		for (int i = 1; i < cozum_kumesi.getItemCount(); i++) {
+			c = (Cozum)cozum_kumesi.getItemAt(i);
+			if (i == min_index){
+				c.label = ""+(i+1)+". Çözüm(En İyi)";
+			} else  {
+				c.label = ""+(i+1)+". Çözüm";
+			}
+		}
 	}
 	public void pso_set_current_time(long m){
 		current_time.setText("Zaman: "+m+" ms");
