@@ -75,6 +75,7 @@ public class PSO {
 		Thread t = new Thread(){
 			public void run() {
 				for (int i = 0; i < deneme_sayisi; i++) {
+					PSOScreen.instance().pso_started();
 					pg.init(problem, parcacik_sayisi, 0, 4, -4, 4);
 					pg.solve(maksimum_iterasyon,zaman_kisiti);
 					PSOScreen.instance().pso_cozum_ekle(pg.cozum.getClone());
@@ -137,22 +138,27 @@ class ParticleGroup{
 				if (!init){
 					return;
 				}
-				if (painted_cozum != null){
-					showing_order = painted_cozum.cozum;
+				if(stop){
+					System.out.println("--");
 				}
 				boolean make_table = false;
-				if (table == null || showing_order == null){
-					showing_order = new int[global_best_order.length];
-					make_table = true;
+				if (painted_cozum != null){
+					showing_order = painted_cozum.cozum;
+					table = painted_cozum.table;
 				} else {
-					if (showing_order.length != global_best_order.length){
+					if (table == null || showing_order == null){
 						showing_order = new int[global_best_order.length];
 						make_table = true;
 					} else {
-						for (int i = 0; i < showing_order.length; i++) {
-							if (showing_order[i] != global_best_order[i]){
-								make_table = true;
-								break;
+						if (showing_order.length != global_best_order.length){
+							showing_order = new int[global_best_order.length];
+							make_table = true;
+						} else {
+							for (int i = 0; i < showing_order.length; i++) {
+								if (showing_order[i] != global_best_order[i]){
+									make_table = true;
+									break;
+								}
 							}
 						}
 					}
@@ -267,6 +273,7 @@ class ParticleGroup{
 	}
 	public void setPaintedCozum(Cozum c){
 		painted_cozum = c;
+		screen.repaint();
 	}
 	public void stop(){
 		stop = true;
@@ -393,6 +400,7 @@ class ParticleGroup{
 			}
 			fileOutput = null;
 		}
+		stop = true;
 		PSOScreen.instance().pso_set_current_percent(100);
 		PSOScreen.instance().pso_stopped();
 	}
@@ -546,11 +554,12 @@ class Algorithm {
 //		System.out.println("SPV: from > "+from);
 //		System.out.println("SPV: order > "+getArrayString(order));
 //		System.out.println("SPV: x     > "+getArrayString(x));
+		
 		for (int i = 0; i < order.length; i++) {
 			double min = 1000;
 			int target=0;
 			for (int j = 0; j < x.length; j++) {
-				if (x[j] < min){
+				if (j == 0 || x[j] < min){
 					target = j;
 					min = x[j];
 				}
