@@ -96,6 +96,10 @@ public class PSOScreen extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	public void pso_started(){
+		coz.setEnabled(false);
+		durdur.setEnabled(true);
+	}
 	public void pso_stopped(){
 		coz.setEnabled(true);
 		durdur.setEnabled(false);
@@ -396,7 +400,7 @@ public class PSOScreen extends JFrame {
 		deneme_sayisi.addItem(new ComboItem("5 Deneme",5));
 		deneme_sayisi.addItem(new ComboItem("10 Deneme",10));
 		deneme_sayisi.addItem(new ComboItem("20 Deneme",20));
-		deneme_sayisi.setSelectedIndex(0);
+		deneme_sayisi.setSelectedIndex(1);
 		
 		g = new GridBagConstraints();
 		g.gridx = 0;
