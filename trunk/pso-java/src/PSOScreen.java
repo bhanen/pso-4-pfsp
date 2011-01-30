@@ -36,8 +36,6 @@ public class PSOScreen extends JFrame {
 				}
 			}
 		}
-		
-		
 		new PSOScreen();
 	}
 	private JComboBox genel_problemler;
