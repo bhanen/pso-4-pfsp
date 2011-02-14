@@ -58,4 +58,15 @@ class Particle {
 			System.arraycopy(current_order, 0, best_order, 0, current_order.length);
 		}
 	}
+	public void degerleri_goster(String label){
+		System.out.print(label+">");
+		for (int i = 0; i < x.length; i++) {
+			System.out.print(" x["+i+"]="+x[i]);
+		}
+		System.out.println(label+">");
+		for (int i = 0; i < x.length; i++) {
+			System.out.print(" v["+i+"]="+v[i]);
+		}
+		System.out.println();
+	}
 }
