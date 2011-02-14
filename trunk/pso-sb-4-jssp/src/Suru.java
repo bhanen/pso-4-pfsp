@@ -79,7 +79,11 @@ class Suru {
 			if (stop){
 				break;
 			}
+			if (j%1000 == 0){
+				System.out.println("count:"+j);
+			}
 		}
+		Algorithms.localSearch2(problem, global_best_order, temp);
 		stop = true;
 	}
 	private void calculate_global_best(int step){
@@ -89,12 +93,17 @@ class Suru {
 			int pbest = particles[i].getBestTFT();
 			if (pbest < global_best_tft ){
 				global_best_tft = pbest;
+				System.out.println("g:"+global_best_tft);
+				problem.yayilma_zamani = global_best_tft;
 				System.arraycopy(p_x, 0, global_best, 0, p_x.length);
 				System.arraycopy(p_order, 0, global_best_order, 0, p_x.length);
 			}
 		}
-		
-		
-		
+	}
+	public void degerleri_goster(){
+		System.out.println("sürü değerleri:");
+		for (int i = 0; i < particles.length; i++) {
+			particles[i].degerleri_goster(i+"");
+		}
 	}
 }

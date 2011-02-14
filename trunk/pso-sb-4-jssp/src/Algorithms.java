@@ -22,12 +22,18 @@ public class Algorithms {
 		AltIs makinedeki_son_is[] = new AltIs[problem.makine_sayisi];
 		int isler_son_zaman[] = new int[problem.is_sayisi];
 		for (int i = 0; i < cozum.length; i++) {
-			System.out.println("suanda["+i+"]"+cozum[i]);
+//			System.out.println("suanda["+i+"]"+cozum[i]);
 //			if (i == 14){
 //				System.out.println("--");
 //			}
 			AltIs siradaki_is = problem.isler[cozum[i]].siralanmamis_ilk_eleman();
 			int siradaki_isin_bir_onceki_is_bitis_zamani = 0;
+			if (siradaki_is == null){
+				System.out.println(">>>>:siradi is null");
+			}
+			if (siradaki_is.is_icin_oncesi == null){
+				System.out.println("is icin oncesi nulll");
+			}
 			if (siradaki_is.is_icin_oncesi.makine != -1){
 				siradaki_isin_bir_onceki_is_bitis_zamani = siradaki_is.is_icin_oncesi.baslangic_zamani+siradaki_is.is_icin_oncesi.sure;
 			}
@@ -89,7 +95,7 @@ public class Algorithms {
 					isler_son_zaman[siradaki_is.parent.is_no] = siradaki_is.baslangic_zamani + siradaki_is.sure;
 				}
 			}
-			problem.sirayi_goster();
+//			problem.sirayi_goster();
 		}
 		problem.yayilma_zamani = 0;
 		for (int i = 0; i < makinedeki_son_is.length; i++) {
